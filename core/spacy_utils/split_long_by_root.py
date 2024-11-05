@@ -67,12 +67,13 @@ def split_long_by_root_main(nlp):
     with open("output/log/sentence_splitbyconnector.txt", "r", encoding="utf-8") as input_file:
         sentences = input_file.readlines()
 
+    long_sentence_threshold = load_key("subtitle.long_sentence_threshold")
     all_split_sentences = []
     for sentence in sentences:
         doc = nlp(sentence.strip())
-        if len(doc) > 60:
+        if len(doc) > long_sentence_threshold:
             split_sentences = split_long_sentence(doc)
-            if any(len(nlp(sent)) > 60 for sent in split_sentences):
+            if any(len(nlp(sent)) > long_sentence_threshold for sent in split_sentences):
                 split_sentences = [subsent for sent in split_sentences for subsent in split_extremely_long_sentence(nlp(sent))]
             all_split_sentences.extend(split_sentences)
             print(f"[yellow]✂️  Splitting long sentences by root: {sentence[:30]}...[/yellow]")

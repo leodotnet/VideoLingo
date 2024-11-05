@@ -32,6 +32,10 @@ subtitle:
   # *Translated subtitles are slightly larger than source subtitles, affecting the reference length for subtitle splitting
   target_multiplier: 1.1
 
+  best_match_threshold: 0.65
+
+  long_sentence_threshold: 30
+
 # *Number of LLM multi-threaded accesses
 max_workers: 8
 # *Maximum number of words for the first rough cut, below 18 will cut too finely affecting translation, above 22 is too long and will make subsequent subtitle splitting difficult to align
