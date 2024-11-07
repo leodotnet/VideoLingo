@@ -1,13 +1,16 @@
+import sys
 import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 import string
+
 from core.step1_ytdlp import download_video_ytdlp, find_video_files
 from core.all_whisper_methods.whisperX import transcribe as ts
 from rich import print as rprint
-from st_components.imports_and_utils import step3_1_spacy_split, step5_splitforsub, step6_generate_final_timeline
+from core import step3_1_spacy_split
 import pandas as pd
 from rich.console import Console
 from core.step6_generate_final_timeline import align_timestamp
-from core.step8_gen_audio_task import check_len_then_trim
 from core.config_utils import load_key
 from deepmultilingualpunctuation import PunctuationModel
 
@@ -139,7 +142,7 @@ def fake_translate(split_sentence_path="output/log/sentence_splitbydetectpunc.tx
     df_time = align_timestamp(df_text, df_translate, subtitle_output_configs, output_dir="output/log/", for_display=False)
     console.print(df_time)
     # apply check_len_then_trim to df_time['Translation'], only when duration > MIN_TRIM_DURATION.
-    df_time['Translation'] = [""] * len(df_time) #df_time.apply(lambda x: check_len_then_trim(x['Translation'], x['duration']) if x['duration'] > min_trim_duration else x['Translation'], axis=1)
+    #df_time['Translation'] = [""] * len(df_time) #df_time.apply(lambda x: check_len_then_trim(x['Translation'], x['duration']) if x['duration'] > min_trim_duration else x['Translation'], axis=1)
     console.print(df_time)
     
     df_time.to_excel("output/log/translation_results.xlsx", index=False)
@@ -169,10 +172,19 @@ def process_text():
 
 
 if __name__ == '__main__':
-    # Example usage
-    url = input('Please enter the URL of the video you want to download: ')
-    resolution = input('Please enter the desired resolution (360/1080, default 1080): ')
-    resolution = int(resolution) if resolution != "" and resolution.isdigit() else 1080
+
+    import argparse
+    parser = argparse.ArgumentParser(description='Download and process video')
+    parser.add_argument('--url', type=str, help='URL of the video to download')
+    parser.add_argument('--resolution', type=int, default='1080', help='Resolution of the video to download')
+    args = parser.parse_args()
+
+    url = args.url
+    resolution = args.resolution
+
+    # url = input('Please enter the URL of the video you want to download: ')
+    # resolution = input('Please enter the desired resolution (360/1080, default 1080): ')
+    # resolution = int(resolution) if resolution != "" and resolution.isdigit() else 1080
     if url != "":
         print(f"🎥 Download from URL {url} with resolution {resolution}")
         download_video_ytdlp(url, resolution=resolution)
@@ -183,5 +195,7 @@ if __name__ == '__main__':
     convert2audio()
 
     process_text()
+
+    print("Initial Subtitle is ready for translation")
 
     
