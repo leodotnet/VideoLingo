@@ -4,7 +4,8 @@
 api:
   key: 'YOUR_KEY'
   base_url: 'https://yunwu.zeabur.app'
-  model: 'claude-3-5-sonnet-20240620'
+  model: 'claude3-5-sonnet-v2'
+  timeout: 60
 
 # Replicate API settings, only necessary for whisperxapi
 replicate_api_token: 'YOUR_KEY'
@@ -56,8 +57,8 @@ openai_tts:
 
 # Azure configuration
 azure_tts:
-  key: 'YOUR_KEY'
-  region: 'eastasia'
+  key: 'c88d06ba4ca44c8da00c2980a2208bdc'
+  region: 'southeastasia'
   voice: 'zh-CN-YunfengNeural'
 
 # SoVITS configuration
